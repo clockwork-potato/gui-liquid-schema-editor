@@ -1,0 +1,405 @@
+{% assign cms = section.settings %}
+
+{% liquid
+  assign loading = 'eager'
+  assign fetchpriority = 'auto'
+
+  if section.index0 == 0
+    assign fetchpriority = 'high'
+  elsif section.index0 > 0
+    assign loading = 'lazy'
+  endif
+%}
+
+<section x-data="carouselSolution" class="tw-relative">
+  {%
+    render 'v4-impact-section-tag',
+    text: cms.section_tag,
+  %}
+  <div
+    class="wrapper smallLaptop:tw-pt-12 tw-flex tw-flex-col tw-py-18 lg:tw-py-28"
+  >
+    <div class="tw-mx-auto tw-flex tw-w-full tw-max-w-5xl tw-flex-col tw-gap-14 to-lg:tw-overflow-hidden to-lg:tw-px-8">
+      <h2 class="tw-text-tiny heading tw-basis-full tw-py-1 tw-font-extrabold tw-text-white">
+        <span class="lg:tw-max-w-4xl">
+          {{ cms.heading }}
+        </span>
+      </h2>
+
+      <div class="tags-wrapper">
+        <div class="tw-mb-6 tw-flex tw-flex-shrink-0 tw-gap-2 lg:tw-mb-8 lg:tw-gap-4">
+          {% for block in section.blocks %}
+            {% assign blk = block.settings %}
+            <div class="tag tw-flex tw-flex-shrink-0">
+              <div
+                x-bind:class="index === {{ forloop.index0 }} && '!tw-bg-yellow-energy !tw-text-black-background'"
+                class="tw-flex tw-items-center tw-gap-2 tw-self-start tw-whitespace-nowrap tw-rounded-full tw-border-2 tw-border-yellow-energy tw-px-4 tw-py-2 tw-text-sm tw-font-bold tw-uppercase !tw-leading-none tw-tracking-[0.0625em] tw-text-yellow-energy lg:tw-px-6 lg:tw-py-3 lg:tw-text-xl"
+              >
+                <span
+                  x-bind:class="index === {{ forloop.index0 }} ? '[&_svg_path]:tw-stroke-black-background' : '[&_svg_path]:tw-stroke-yellow-energy'"
+                  class="tw-h-6 tw-w-6 lg:tw-h-8 lg:tw-w-8 [&_svg]:tw-h-full [&_svg]:tw-w-full"
+                >
+                  {{ blk.icon }}
+                </span>
+                <span>
+                  {{ blk.label }}
+                </span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="tw-flex tw-overflow-hidden">
+      {% for block in section.blocks %}
+        {% assign blk = block.settings %}
+        <div class="slide tw-flex-shrink-0 tw-basis-full tw-transform-gpu tw-will-change-transform to-lg:tw-px-6">
+          <div class="smallLaptop:tw-max-w-3xl tw-relative tw-mx-auto tw-max-w-5xl tw-overflow-hidden tw-rounded-[2rem] to-lg:tw-aspect-1">
+            {% if blk.image %}
+              {{
+                blk.image
+                | image_url: width: 3000
+                | image_tag:
+                  sizes: '(max-width: 64em) 800px, 3000px',
+                  class: 'tw-img-full',
+                  loading: loading,
+                  fetchpriority: fetchpriority,
+                  alt: blk.image.alt
+              }}
+            {% endif %}
+
+            <div
+              style="box-shadow: inset 0 0 30px 0px rgb(255 255 255 / 0.1);"
+              class="tw-absolute tw-inset-0 tw-p-6 lg:tw-p-8"
+            >
+              {% case block.type %}
+                {% when 'all' %}
+                  <div
+                    class="tw-flex tw-h-full tw-w-full tw-flex-col tw-justify-between lg:tw-justify-end"
+                  >
+                    <span class="tw-text-body-large lg:tw-text-tiny tw-font-extrabold tw-text-white">
+                      {{- blk.surtitle -}}
+                    </span>
+                    <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-font-extrabold tw-text-white">
+                      {{- blk.title -}}
+                    </span>
+                  </div>
+                {% when 'columns' %}
+                  <div
+                    class="tw-flex tw-h-full tw-w-full tw-flex-col tw-items-end tw-gap-4 lg:tw-flex-row to-lg:tw-items-start to-lg:tw-justify-end"
+                  >
+                    <div class="tw-flex tw-flex-col tw-gap-2 lg:tw-flex-1">
+                      <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-text-center tw-font-extrabold tw-text-white to-lg:tw-text-start">
+                        {{- blk.title_1 -}}
+                      </span>
+                      <span class="tw-text-body-large lg:tw-text-tiny tw-text-center tw-font-medium tw-text-white lg:tw-font-extrabold to-lg:tw-text-start">
+                        {{- blk.subtitle_1 -}}
+                      </span>
+                    </div>
+
+                    <div class="tw-flex tw-flex-col tw-gap-2 lg:tw-flex-1">
+                      <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-text-center tw-font-extrabold tw-text-white to-lg:tw-text-start">
+                        {{- blk.title_2 -}}
+                      </span>
+                      <span class="tw-text-body-large lg:tw-text-tiny tw-text-center tw-font-medium tw-text-white lg:tw-font-extrabold to-lg:tw-text-start">
+                        {{- blk.subtitle_2 -}}
+                      </span>
+                    </div>
+
+                    <div class="tw-flex tw-flex-col tw-gap-2 lg:tw-flex-1">
+                      <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-text-center tw-font-extrabold tw-text-white to-lg:tw-text-start">
+                        {{- blk.title_3 -}}
+                      </span>
+                      <span class="tw-text-body-large lg:tw-text-tiny tw-text-center tw-font-medium tw-text-white lg:tw-font-extrabold to-lg:tw-text-start">
+                        {{- blk.subtitle_3 -}}
+                      </span>
+                    </div>
+                  </div>
+                {% when 'emphasis' %}
+                  <div
+                    class="tw-flex tw-h-full tw-w-full tw-items-end tw-gap-4"
+                  >
+                    <div class="tw-flex tw-flex-col">
+                      <span
+                        class="tw-text-body-large lg:tw-text-tiny tw-text-end tw-font-extrabold tw-text-yellow-energy"
+                      >
+                        {{- blk.surtitle -}}
+                      </span>
+                      <span
+                        class="tw-text-mega tw-text-center tw-font-black tw-text-yellow-energy lg:tw-text-[9.875rem]"
+                      >
+                        {{- blk.emphasis -}}
+                      </span>
+                    </div>
+                    <span class="tw-text-body-large lg:tw-text-tiny tw-max-w-[15rem] tw-text-left tw-font-extrabold tw-text-white">
+                      {{- blk.text -}}
+                    </span>
+                  </div>
+                {% when 'equivalence' %}
+                  <div
+                    class="tw-flex tw-h-full tw-w-full tw-flex-col tw-items-center tw-justify-center"
+                  >
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                      <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-text-center tw-font-extrabold tw-text-white">
+                        {{- blk.title_top -}}
+                      </span>
+                      <span class="tw-text-body-large lg:tw-text-tiny tw-text-center tw-font-extrabold tw-text-white">
+                        {{- blk.text_top -}}
+                      </span>
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="112"
+                      height="112"
+                      viewBox="0 0 112 112"
+                      fill="none"
+                    >
+                      <g clip-path="url(#clip0_8174_20144)">
+                        <path d="M23.334 46.668H88.6673" stroke="#EDFF00" stroke-width="3.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M23.334 65.332H88.6673" stroke="#EDFF00" stroke-width="3.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_8174_20144">
+                          <rect width="112" height="112" rx="48" fill="white"/>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                      <span class="tw-text-medium lg:tw-text-large 3xl:tw-text-super tw-text-center tw-font-extrabold tw-text-white">
+                        {{- blk.title_bottom -}}
+                      </span>
+                      <span class="tw-text-body-large lg:tw-text-tiny tw-text-center tw-font-extrabold tw-text-white">
+                        {{- blk.text_bottom -}}
+                      </span>
+                    </div>
+                  </div>
+              {% endcase %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% comment %}
+      <div
+        class="tw-flex tw-overflow-hidden tw-rounded-[2rem] tw-w-full tw-aspect-1 md:tw-aspect-2 tw-mx-auto"
+      ></div>
+    {% endcomment %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V4 - Impact solution",
+  "enabled_on": { "templates": ["page"] },
+  "blocks": [
+    {
+      "name": "Pour tous",
+      "limit": 1,
+      "type": "all",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "SVG icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Pour tous"
+        },
+        {
+          "type": "text",
+          "id": "surtitle",
+          "label": "Sur Titre",
+          "default": "L'autoconsommation"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Une nouvelle liberté individuelle"
+        }
+      ]
+    },
+    {
+      "name": "3 colonnes",
+      "limit": 1,
+      "type": "columns",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "SVG icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Pour tous"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Titre 1",
+          "default": "40 ans"
+        },
+        {
+          "type": "text",
+          "id": "subtitle_1",
+          "label": "Sous Titre 1",
+          "default": "de durée de vie"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Titre 2",
+          "default": "95%"
+        },
+        {
+          "type": "text",
+          "id": "subtitle_2",
+          "label": "Sous Titre 2",
+          "default": "Recyclable"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Titre 3",
+          "default": "1 an"
+        },
+        {
+          "type": "text",
+          "id": "subtitle_3",
+          "label": "Sous Titre 3",
+          "default": "de retour carbonne"
+        }
+      ]
+    },
+    {
+      "name": "Texte accentué",
+      "limit": 1,
+      "type": "emphasis",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "SVG icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Pour tous"
+        },
+        {
+          "type": "text",
+          "id": "surtitle",
+          "label": "SurTitre",
+          "default": "Le kWh"
+        },
+        {
+          "type": "text",
+          "id": "emphasis",
+          "label": "Texte accentué",
+          "default": "3X"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "moins cher que le tarif réglementé"
+        }
+      ]
+    },
+    {
+      "name": "Equivalence",
+      "limit": 1,
+      "type": "equivalence",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "SVG icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Pour tous"
+        },
+        {
+          "type": "text",
+          "id": "title_top",
+          "label": "Titre Top",
+          "default": "1h30"
+        },
+        {
+          "type": "html",
+          "id": "text_top",
+          "label": "Texte top",
+          "default": "d’exposition solaire sur Terre"
+        },
+        {
+          "type": "text",
+          "id": "title_bottom",
+          "label": "Titre Top",
+          "default": "1 an"
+        },
+        {
+          "type": "html",
+          "id": "text_bottom",
+          "label": "Texte top",
+          "default": "d’autonomie pour Tous"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_tag",
+      "label": "Tag section",
+      "default": "Solution : le solaire"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Face à cette urgence environnementale et l’explosion des besoin énergétique, le <span class=\"tw-text-yellow-energy\">solaire</span> devient donc une <span class=\"tw-text-yellow-energy\">évidence</span>."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Energy positive"
+    }
+  ],
+  "presets": [
+    {
+      "name": "V4 - Impact solution"
+    }
+  ]
+}
+{% endschema %}
